@@ -3,13 +3,12 @@
 session_start();
 require 'conxDB.php';
 $id = $_GET['id'];
-$statment = $pdo->prepare('SELECT * from inscription where codeInsc = :id');
+$statment = $pdo->prepare('SELECT  inscription.codeInsc,voyage.codeVoyage,dateVoy,villeD,villeA,heureDepart,duree,ADDTIME(heureDepart,duree * 60) as heureArivee FROM inscription,voyage,descriptionvoyage  WHERE inscription.codeVoyage = voyage.codeVoyage AND descriptionvoyage.codDesc = voyage.codDesc AND codeInsc = :id ;');
 $statment->execute([
     ':id' => $id
 ]);
-$inscriptions = $statment->fetch(PDO::FETCH_ASSOC);
+$inscription = $statment->fetch(PDO::FETCH_ASSOC);
 
-var_dump($inscriptions);
 ?>
 
 
@@ -160,17 +159,20 @@ a{
 			<th><h1>ville de départ</h1></th>
             <th><h1>ville de d'arrivée</h1></th>
             <th><h1>heure de départ</h1></th>
+            <th><h1>heure d'arrivée</h1></th>
 		</tr>
 	</thead>
 	<tbody>
     <a href="Sinscrire.php" name="id">Ajouter</a>
         
-    <tr>
-                <td><?php echo $inscriptions["dateVoy"]; ?></td>
-                <td><?php echo $_SESSION['codeVoy']['villeD']; ?></td>
-                <td><?php echo $_SESSION['codeVoy']['villeA']; ?></td>
-                <td><?php echo $_SESSION['codeVoy']['heureDepart']; ?></td>
-            </tr>
+    <tr>      
+        <td><?php echo $inscription["dateVoy"]; ?></td>
+        <td><?php echo $inscription['villeD']; ?></td>
+        <td><?php echo $inscription['villeA']; ?></td>
+        <td><?php echo $inscription['heureDepart']; ?></td>
+        <td><?php echo $inscription['heureArivee']; ?></td>
+
+      </tr>
 	</tbody>
 </table>
  
